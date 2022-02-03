@@ -57,7 +57,7 @@ lg = lg/100
 st.sidebar.subheader("Utgifter og inntekter")
 
 # Andre Utgifter
-au_kr = st.sidebar.slider('Felleskonstander +', 0, 15000, 5000,step=100)
+au_kr = st.sidebar.slider('Andre utgifter (inkludert felleskonstander)', 0, 15000, 5000,step=100)
 # Månedlig utgifter
 kon_0 = st.sidebar.slider('Månedsforbruk', 0, 30000, 13000,step=500)
 # Leieinntekter
