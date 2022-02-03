@@ -12,7 +12,7 @@ st.write("""
 ##### Velkommen til boligbudsjett.no
 Dette er et verktøy for å hjelpe deg til å få et bedre innblikk i din privatøkonomi knyttet til boligkjøp
 
-For å bruke hverktøyet, fyll inn informasjonen til venstre. Lek litt rundt renenivået, lønnsutvikling og de andre verdiene for å se hvordan de vill påvirke din privatøkonomi.
+For å bruke verktøyet, fyll inn informasjonen til venstre. Lek litt rundt rentenivået, lønnsutvikling og de andre verdiene for å se hvordan de vill påvirke din privatøkonomi.
 """)
 
 st.text("")
@@ -261,7 +261,7 @@ st.write("""
 """)
 st.write("""
 ##### Antall kroner til sparing etter alle utgifter, per måned
-Om denne linjen går under null, vill du gå i minus den måneden, og har sansynligvis ikke rå til å betjene lånet
+Om denne linjen går under null, vill du gå i minus den måneden, og har sannsynligvis ikke rå til å betjene lånet
 """)
 
 summary_dataframe = summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, au_kr, t_sl)
@@ -313,20 +313,20 @@ st.write(budsjett[1:])
 st.write("""
 Hvordan funker disse oversiktene?
 
-Denne modelle tar utgangspunkt i oppgitte verdier og justerer tallene inn i fremtiden.
+Denne modellen tar utgangspunkt i oppgitte verdier og justerer tallene inn i fremtiden.
 
-Utgifter og priser blir juster opp hver måned (eks. boligpris og utgifter), lønn og leieinnteker blir kuster en gang i året.
+Utgifter og priser blir juster opp hver måned (eks. boligpris og utgifter), lønn og leieinntekter blir kuster en gang i året.
 
-EK - Egenkapital, er justert for kostnad knyttet til salg av bolig (satt til 100.000 kr og oppjusteres med KPI) og beskattning på verdipapirer (satt til 27%)
+EK - Egenkapital, er justert for kostnad knyttet til salg av bolig (satt til 100.000 kr og oppjusteres med KPI) og beskatning på verdipapirer (satt til 27%)
 
-Det antaes at alt som er igejn til sparing blir investert, gjelder også EK som ikke blir brukt til kjøp av bolig.
+Det antas at alt som er igjen til sparing blir investert, gjelder også EK som ikke blir brukt til kjøp av bolig.
 
-Inntektsskatten beregnes ved en funksjon som kan avvike fra virkeligheten, for å sjekke din lønn etter skatt gå til statens skattekalkulator, og juster modellen derretter. https://skattekalkulator.app.skatteetaten.no/#/
+Inntektsskatten beregnes ved en funksjon som kan avvike fra virkeligheten, for å sjekke din lønn etter skatt gå til statens skattekalkulator, og juster modellen deretter. https://skattekalkulator.app.skatteetaten.no/#/
 
-For å finne ut hvor mye du har i månedlig konsum, sjekk gjenrne refferansebudsjettet til Oslo komune: https://www.oslomet.no/om/sifo/referansebudsjettet
+For å finne ut hvor mye du har i månedlig konsum, sjekk gjerne referansebudsjettet til Oslo kommune: https://www.oslomet.no/om/sifo/referansebudsjettet
 
 
-Forslag til videre utvidelser, send gjerne mail til stianlind@hotmail.com, bruk gjerne boligbudsjett.no i titelen på eposten. :)
+Forslag til videre utvidelser, send gjerne mail til stianlind@hotmail.com, bruk gjerne boligbudsjett.no i tittelen på eposten. :)
 
 """)
 
@@ -347,7 +347,7 @@ NB!
 
 Feil kan forekomme!
 Dette er kun ment som et veiledende verktøy.
-Altid konsulter din bank før inngåelse av låneaavtale.
+Alltid konsulter din bank før inngåelse av låneavtale.
 
 ""
 
