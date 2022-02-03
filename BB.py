@@ -31,7 +31,7 @@ lønn_0 = st.sidebar.number_input('Årslønn før skatt',value=550000,step=10000
 # Lengde på lån
 lt = st.sidebar.selectbox('Låneperode, antall år',np.arange(30)+1, 24)
 # Tidshorisont, år
-t = st.sidebar.number_input('Tidshorisont, antall år', value=5)
+t = st.sidebar.number_input('Tidshorisont, antall år', value=8)
 
 
 # Inndeling
@@ -57,9 +57,9 @@ lg = lg/100
 st.sidebar.subheader("Utgifter og inntekter")
 
 # Andre Utgifter
-au_kr = st.sidebar.slider('Felleskonstander +', 0, 10000, 5000,step=100)
+au_kr = st.sidebar.slider('Felleskonstander +', 0, 15000, 5000,step=100)
 # Månedlig utgifter
-kon_0 = st.sidebar.slider('Månedsforbruk', 0, 25000, 13000,step=500)
+kon_0 = st.sidebar.slider('Månedsforbruk', 0, 30000, 13000,step=500)
 # Leieinntekter
 leitak_kr = st.sidebar.slider('Leieinntekter', 0, 25000, 6000,step=100)
 # Studiegjeld 
