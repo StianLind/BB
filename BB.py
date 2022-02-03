@@ -1,27 +1,39 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
 
 st.write("""
-## Bolig budsjett
+## boligbudsjett.no
 """)
 
+st.write("""
+##### Velkommen til boligbudsjett.no
+Dette er et verktøy for å hjelpe deg til å få et bedre innblikk i din privatøkonomi knyttet til boligkjøp
+
+For å bruke hverktøyet, fyll inn informasjonen til venstre. Lek litt rundt renenivået, lønnsutvikling og de andre verdiene for å se hvordan de vill påvirke din privatøkonomi.
+""")
+
+st.text("")
 
 # Input
 
 st.sidebar.header("Bolig og finnansiering")
 # Bolig pris 
-P_0 = st.sidebar.number_input('Boligpris',value=5500000,step=50000)
+P_0 = st.sidebar.number_input('Boligpris' ,value=5500000,step=50000)
 # Lånemengde
 L_0 = st.sidebar.number_input('Lånebeløp',value=4000000,step=50000)
 # Egenkapital
-EK = st.sidebar.number_input('Egenkaptial',value=1500000,step=50000)
+EK = st.sidebar.number_input('Egenkaptial (EK)',value=1500000,step=50000)
 # Årslønn
 lønn_0 = st.sidebar.number_input('Årslønn før skatt',value=550000,step=10000)
 # Lengde på lån
-lt = st.sidebar.selectbox('Låneperode',np.arange(30)+1, 24)
+lt = st.sidebar.selectbox('Låneperode, antall år',np.arange(30)+1, 24)
+# Tidshorisont, år
+t = st.sidebar.number_input('Tidshorisont, antall år', value=5)
+
 
 # Inndeling
 st.sidebar.subheader("Detaljer")
@@ -56,10 +68,6 @@ sl = st.sidebar.slider('Studiegjeld nedbetaling per måned', 0, 10000, 3500,step
 # Tid til betjening av studiegjeld
 t_sl = st.sidebar.slider('Studiegjeld utsettelse, måneder', 0, 36, 36)
 
-# Inndeling
-st.sidebar.subheader("Graf")
-# Tidshorisont
-t = st.sidebar.slider('Tidshorisont', 1, 30, 8)
 
 
 # Programmer
@@ -150,7 +158,6 @@ def ann_S_A(A, lt):
         A_S[i] = A
     return A_S
 
-
 def summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, au_kr,t_sl):
     verdi_sats="Sats"
     kap_skatt=0.27
@@ -236,7 +243,7 @@ def summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, 
     data =  np.transpose([P_S,L_S,ek_inv_S,EK_S,ek_inv_es_S,sum_EK,lønn_S_1,lønn_e_skatt_S_1,A_S,av_S,r_k_S,AU_S,su_S,Studie_gjeld_S,lønn_e_ut_1, leie_in_S_1,kon_S_1,inv_S_1])
 
     summar_all =  pd.DataFrame(data=data, columns=col)
-
+    
 
     results = summar_all
 
@@ -246,26 +253,104 @@ def summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, 
     return results
  
 
+# Grafer
+
+
+# Sparing
+st.write("""
+### Månedlig overskudd/underskudd
+""")
+st.write("""
+##### Antall kroner til sparing etter alle utgifter, per måned
+Om denne linjen går under null, vill du gå i minus den måneden, og har sansynligvis ikke rå til å betjene lånet
+""")
+
 summary_dataframe = summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, au_kr, t_sl)
 
 
+sparig_data = (summary_dataframe["Sparing"].tolist())[1:]
+sparig_data = np.float_(sparig_data)
+st.line_chart(sparig_data)
 
+st.write("""
+#### Se enkeltverdier over tid
+""")
 
+col_l = ["Bolig verdi","Lån","Verdipapirer","EK Bolig","EK verdipapirer","EK total","Lønn","Lønn etter skatt","Betjening av lån","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum","Sparing"]
 
-col_l = ["Sparing","Bolig verdi","Lån","Verdipapirer","EK Bolig","EK verdipapirer","EK total","Lønn","Lønn etter skatt","Betjening av lån","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum"]
-
-select_verdi = st.selectbox('Velg verdi',col_l)
+select_verdi = st.selectbox("Velg verdi du ønsker å se over tid",col_l)
 st.write(select_verdi)
 
 
 plot_data = (summary_dataframe[select_verdi].tolist())[1:]
 plot_data = np.float_(plot_data)
 
-
-
 st.line_chart(plot_data)
 
-st.write(summary_dataframe)
+
+
+st.write("""
+### Total Oversikt
+""")
 
 
 
+formue = summary_dataframe[["Bolig verdi","Lån","Verdipapirer","EK Bolig","EK verdipapirer","EK total"]]
+budsjett = summary_dataframe[["Lønn","Lønn etter skatt","Betjening av lån","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum","Sparing"]]
+
+st.write("""
+##### Total Oversikt, formue
+""")
+
+st.write(formue)
+
+
+st.write("""
+##### Total Oversikt, inntekter og utgifter
+""")
+
+st.write(budsjett[1:])
+
+st.write("""
+Hvordan funker disse oversiktene?
+
+Denne modelle tar utgangspunkt i oppgitte verdier og justerer tallene inn i fremtiden.
+
+Utgifter og priser blir juster opp hver måned (eks. boligpris og utgifter), lønn og leieinnteker blir kuster en gang i året.
+
+EK - Egenkapital, er justert for kostnad knyttet til salg av bolig (satt til 100.000 kr og oppjusteres med KPI) og beskattning på verdipapirer (satt til 27%)
+
+Det antaes at alt som er igejn til sparing blir investert, gjelder også EK som ikke blir brukt til kjøp av bolig.
+
+Inntektsskatten beregnes ved en funksjon som kan avvike fra virkeligheten, for å sjekke din lønn etter skatt gå til statens skattekalkulator, og juster modellen derretter. https://skattekalkulator.app.skatteetaten.no/#/
+
+For å finne ut hvor mye du har i månedlig konsum, sjekk gjenrne refferansebudsjettet til Oslo komune: https://www.oslomet.no/om/sifo/referansebudsjettet
+
+
+Forslag til videre utvidelser, send gjerne mail til stianlind@hotmail.com, bruk gjerne boligbudsjett.no i titelen på eposten. :)
+
+""")
+
+
+
+
+
+
+
+# Bottom of page
+
+
+st.text("")
+st.text("")
+
+st.write("""
+NB!
+
+Feil kan forekomme!
+Dette er kun ment som et veiledende verktøy.
+Altid konsulter din bank før inngåelse av låneaavtale.
+
+""
+
+Sånn ok programmert av Stian Nygaard Lind
+""")
