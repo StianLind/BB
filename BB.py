@@ -14,6 +14,8 @@ st.write("""
 Dette er et verktøy for å hjelpe deg til å få et bedre innblikk i din privatøkonomi knyttet til boligkjøp
 
 For å bruke hverktøyet, fyll inn informasjonen til venstre. Lek litt rundt renenivået, lønnsutvikling og de andre verdiene for å se hvordan de vill påvirke din privatøkonomi.
+
+NB! " , " brukes som tusenskille.
 """)
 
 st.text("")
@@ -308,7 +310,7 @@ st.write(månedlig_sparing_tekt)
 st.write(min_sparing_tekst)
 st.write(bolig_invest_verdi)
 
-#st.write(test)
+st.write('" , " Tusenskille')
 
 
 
