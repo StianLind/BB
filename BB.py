@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import locale
-import altair as alt
 
-locale.setlocale(locale.LC_ALL, 'English')
 
 st.set_page_config(layout="wide")
 
@@ -267,10 +264,12 @@ summary_dataframe = summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, s
 list_sparing = (summary_dataframe["Sparing"].tolist())[1:]
 list_sparing = np.float_(list_sparing)
 snitt_sparing = list_sparing.mean()
-snitt_sparing_str = str(locale.format('%.0f', snitt_sparing, True))
+
+snitt_sparing_str =  '{:,}'.format(int(snitt_sparing))
+
 
 min_sparing = list_sparing.min()
-min_sparing_str = str(locale.format('%.0f', min_sparing, True))
+min_sparing_str =  '{:,}'.format(int(min_sparing))
 
 num_neg_sparing = sum(1 for i in list_sparing if i < 0)
 
@@ -289,12 +288,13 @@ else:
 list_bolig_verdi = (summary_dataframe["Bolig verdi"].tolist())
 list_bolig_verdi = np.float_(list_bolig_verdi)
 siste_bolig_verdi = list_bolig_verdi[-1:]
-siste_bolig_verdi_str = str(locale.format('%.0f', siste_bolig_verdi, True))
+siste_bolig_verdi_str =  '{:,}'.format(int(siste_bolig_verdi))
+
 
 list_investering_verdi = (summary_dataframe["Verdipapirer"].tolist())
 list_investering_verdi = np.float_(list_investering_verdi)
 siste_investering_verdi = list_investering_verdi[-1:]
-siste_investering_verdi_str = str(locale.format('%.0f', siste_investering_verdi, True))
+siste_investering_verdi_str =  '{:,}'.format(int(siste_investering_verdi))
 
 bolig_invest_verdi = "Etter %d år vill din bolig være verdt %s kr, og du vill ha %s kr i invisert kapital." % (t, siste_bolig_verdi_str, siste_investering_verdi_str)
 
