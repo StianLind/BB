@@ -60,7 +60,7 @@ lg = lg/100
 st.sidebar.subheader("Utgifter og inntekter")
 
 # Andre Utgifter
-au_kr = st.sidebar.slider('Felleskonstander +', 0, 10000, 5000,step=100)
+au_kr = st.sidebar.slider('Andre utgifter (ink. felleskostnader)', 0, 10000, 5000,step=100)
 # Månedlig utgifter
 kon_0 = st.sidebar.slider('Månedsforbruk', 0, 25000, 13000,step=500)
 # Leieinntekter
@@ -282,7 +282,7 @@ månedlig_sparing_tekt = "Du vill spare %s kr i snitt per måned" % snitt_sparin
 if min_sparing < 0:
     min_sparing_tekst = "Du vill gå med underskudd i %d måneder de neste %d årene. Ditt høyeste underskudd vill være på %s kr" %(num_neg_sparing, t, min_sparing_str)
 else:
-    min_sparing_tekst = "Du vill ikke gå med underskudd de første %d årene. Ditt lavese overskudd vill være på %s kr" % (t, min_sparing_str)
+    min_sparing_tekst = "Du vill ikke gå med underskudd iløpet av de første %d årene. Ditt lavese overskudd vill være på %s kr" % (t, min_sparing_str)
 
 
 
@@ -310,8 +310,6 @@ st.write(månedlig_sparing_tekt)
 st.write(min_sparing_tekst)
 st.write(bolig_invest_verdi)
 
-st.write('" , " Tusenskille')
-
 
 
 # Grafer
@@ -334,7 +332,7 @@ st.line_chart(sparig_data)
 
 
 st.write("""
-#### Se enkeltverdier over tid
+### Se enkeltverdier over tid
 """)
 
 col_l = ["Bolig verdi","Lån","Verdipapirer","EK Bolig","EK verdipapirer","EK total","Lønn","Lønn etter skatt","Betjening av lån","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum","Sparing"]
@@ -374,8 +372,11 @@ Per måned frem i tid.
 
 st.write(budsjett[1:])
 
+st.text("")
+st.text("")
+
 st.write("""
-Hvordan funker disse oversiktene?
+###### Hvordan funker disse oversiktene?
 
 Denne modelle tar utgangspunkt i oppgitte verdier og justerer tallene inn i fremtiden.
 
