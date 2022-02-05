@@ -1,18 +1,23 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import locale
+import altair as alt
+
+locale.setlocale(locale.LC_ALL, 'Norwegian')
 
 st.set_page_config(layout="wide")
 
 st.write("""
-## boligbudsjett.no
+# boligbudsjett.no
 """)
 
 st.write("""
 ##### Velkommen til boligbudsjett.no
 Dette er et verktøy for å hjelpe deg til å få et bedre innblikk i din privatøkonomi knyttet til boligkjøp
 
-For å bruke verktøyet, fyll inn informasjonen til venstre. Lek litt rundt rentenivået, lønnsutvikling og de andre verdiene for å se hvordan de vill påvirke din privatøkonomi.
+For å bruke hverktøyet, fyll inn informasjonen til venstre. Lek litt rundt renenivået, lønnsutvikling og de andre verdiene for å se hvordan de vill påvirke din privatøkonomi.
 """)
 
 st.text("")
@@ -57,9 +62,9 @@ lg = lg/100
 st.sidebar.subheader("Utgifter og inntekter")
 
 # Andre Utgifter
-au_kr = st.sidebar.slider('Andre utgifter (ink. felleskonstander)', 0, 15000, 5000,step=100)
+au_kr = st.sidebar.slider('Felleskonstander +', 0, 10000, 5000,step=100)
 # Månedlig utgifter
-kon_0 = st.sidebar.slider('Månedsforbruk', 0, 30000, 13000,step=500)
+kon_0 = st.sidebar.slider('Månedsforbruk', 0, 25000, 13000,step=500)
 # Leieinntekter
 leitak_kr = st.sidebar.slider('Leieinntekter', 0, 25000, 6000,step=100)
 # Studiegjeld 
@@ -251,25 +256,81 @@ def summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, 
 
     return results
  
+# Create dataframe
+
+summary_dataframe = summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, au_kr, t_sl)
+
+
+
+# Din økonomi
+
+# snitt sparing
+list_sparing = (summary_dataframe["Sparing"].tolist())[1:]
+list_sparing = np.float_(list_sparing)
+snitt_sparing = list_sparing.mean()
+snitt_sparing_str = str(locale.format('%.0f', snitt_sparing, True))
+
+min_sparing = list_sparing.min()
+min_sparing_str = str(locale.format('%.0f', min_sparing, True))
+
+num_neg_sparing = sum(1 for i in list_sparing if i < 0)
+
+
+
+månedlig_sparing_tekt = "Du vill spare %s kr i snitt per måned" % snitt_sparing_str
+
+if min_sparing < 0:
+    min_sparing_tekst = "Du vill gå med underskudd i %d måneder de neste %d årene. Ditt høyeste underskudd vill være på %s kr" %(num_neg_sparing, t, min_sparing_str)
+else:
+    min_sparing_tekst = "Du vill ikke gå med underskudd de første %d årene. Ditt lavese overskudd vill være på %s kr" % (t, min_sparing_str)
+
+
+
+# bolig verdi og sparing
+list_bolig_verdi = (summary_dataframe["Bolig verdi"].tolist())
+list_bolig_verdi = np.float_(list_bolig_verdi)
+siste_bolig_verdi = list_bolig_verdi[-1:]
+siste_bolig_verdi_str = str(locale.format('%.0f', siste_bolig_verdi, True))
+
+list_investering_verdi = (summary_dataframe["Verdipapirer"].tolist())
+list_investering_verdi = np.float_(list_investering_verdi)
+siste_investering_verdi = list_investering_verdi[-1:]
+siste_investering_verdi_str = str(locale.format('%.0f', siste_investering_verdi, True))
+
+bolig_invest_verdi = "Etter %d år vill din bolig være verdt %s kr, og du vill ha %s kr i invisert kapital." % (t, siste_bolig_verdi_str, siste_investering_verdi_str)
+
+
+# print tekst
+
+st.write("""
+## Din økonomi
+""")
+st.write(månedlig_sparing_tekt)
+st.write(min_sparing_tekst)
+st.write(bolig_invest_verdi)
+
+#st.write(test)
+
+
 
 # Grafer
 
 
-# Sparing
+# Overskudd
 st.write("""
 ### Månedlig overskudd/underskudd
 """)
 st.write("""
-##### Antall kroner til sparing etter alle utgifter, per måned
-Om denne linjen går under null, vill du gå i minus den måneden, og har sannsynligvis ikke rå til å betjene lånet
+###### Antall kroner i overskudd/underskudd per måned
+Om denne linjen går under null, vill du gå i underskudd den måneden.
 """)
-
-summary_dataframe = summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, sl,lg,leitak_kr, au_kr, t_sl)
 
 
 sparig_data = (summary_dataframe["Sparing"].tolist())[1:]
 sparig_data = np.float_(sparig_data)
 st.line_chart(sparig_data)
+
+
 
 st.write("""
 #### Se enkeltverdier over tid
@@ -299,6 +360,7 @@ budsjett = summary_dataframe[["Lønn","Lønn etter skatt","Betjening av lån","A
 
 st.write("""
 ##### Total Oversikt, formue
+Per måned frem i tid. Måned 0 er ved kjøpstidspunktet
 """)
 
 st.write(formue)
@@ -306,6 +368,7 @@ st.write(formue)
 
 st.write("""
 ##### Total Oversikt, inntekter og utgifter
+Per måned frem i tid.
 """)
 
 st.write(budsjett[1:])
@@ -313,20 +376,21 @@ st.write(budsjett[1:])
 st.write("""
 Hvordan funker disse oversiktene?
 
-Denne modellen tar utgangspunkt i oppgitte verdier og justerer tallene inn i fremtiden.
+Denne modelle tar utgangspunkt i oppgitte verdier og justerer tallene inn i fremtiden.
 
-Utgifter og priser blir juster opp hver måned (eks. boligpris og utgifter), lønn og leieinntekter blir kuster en gang i året.
+Utgifter og priser blir juster opp hver måned (eks. boligpris og utgifter), lønn og leieinnteker blir kuster en gang i året.
 
-EK - Egenkapital, er justert for kostnad knyttet til salg av bolig (satt til 100.000 kr og oppjusteres med KPI) og beskatning på verdipapirer (satt til 27%)
+EK - Egenkapital, er justert for kostnad knyttet til salg av bolig (satt til 100.000 kr og oppjusteres med KPI) og beskattning på verdipapirer (satt til 27%)
 
-Det antas at alt som er igjen til sparing blir investert, gjelder også EK som ikke blir brukt til kjøp av bolig.
+Det antaes at alt som er igejn til sparing blir investert, gjelder også EK som ikke blir brukt til kjøp av bolig.
 
-Inntektsskatten beregnes ved en funksjon som kan avvike fra virkeligheten, for å sjekke din lønn etter skatt gå til statens skattekalkulator, og juster modellen deretter. https://skattekalkulator.app.skatteetaten.no/#/
+Inntektsskatten beregnes ved en funksjon som kan avvike fra virkeligheten, for å sjekke din lønn etter skatt gå til statens skattekalkulator, og juster modellen derretter. https://skattekalkulator.app.skatteetaten.no/#/
 
-For å finne ut hvor mye du har i månedlig konsum, sjekk gjerne referansebudsjettet til Oslo kommune: https://www.oslomet.no/om/sifo/referansebudsjettet
+For å finne ut hvor mye du har i månedlig konsum, sjekk gjenrne refferansebudsjettet til Oslo komune: https://www.oslomet.no/om/sifo/referansebudsjettet.
 
+Se ditt studiegjeld og nedbetalignsplan på: https://lanekassen.no/nb-NO/gjeld-og-betaling/.
 
-Forslag til videre utvidelser, send gjerne mail til stianlind@hotmail.com, bruk gjerne boligbudsjett.no i tittelen på eposten. :)
+Forslag til videre utvidelser, send gjerne mail til stianlind@hotmail.com, bruk gjerne boligbudsjett.no i titelen på eposten. :)
 
 """)
 
@@ -347,7 +411,7 @@ NB!
 
 Feil kan forekomme!
 Dette er kun ment som et veiledende verktøy.
-Alltid konsulter din bank før inngåelse av låneavtale.
+Altid konsulter din bank før inngåelse av låneaavtale.
 
 ""
 
