@@ -4,7 +4,7 @@ import numpy as np
 import locale
 import altair as alt
 
-locale.setlocale(locale.LC_ALL, 'Norwegian')
+locale.setlocale(locale.LC_ALL, 'English')
 
 st.set_page_config(layout="wide")
 
