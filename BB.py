@@ -73,7 +73,7 @@ leitak_kr = st.sidebar.slider('Leieinntekter', 0, 25000, 6000,step=100)
 # Studiegjeld 
 sl = st.sidebar.slider('Studiegjeld nedbetaling per måned', 0, 10000, 3500,step=100)
 # Tid til betjening av studiegjeld
-t_sl = st.sidebar.slider('Studiegjeld utsettelse, måneder', 0, 36, 72)
+t_sl = st.sidebar.slider('Studiegjeld utsettelse, måneder', 0, 72, 36)
 
 
 
