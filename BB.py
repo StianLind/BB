@@ -340,7 +340,7 @@ st.write("""
 ### Se enkeltverdier over tid
 """)
 
-col_l = ["Bolig verdi","Lån","Verdipapirer","EK Bolig","EK verdipapirer","EK total","Lønn","Lønn etter skatt","Betjening av lån","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum","Sparing"]
+col_l = ["Bolig verdi","Lån","Verdipapirer","EK Bolig","EK verdipapirer","EK total","Lønn","Lønn etter skatt","Betjening av lån","Avdrag","Renteutgivter","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum","Sparing"]
 
 select_verdi = st.selectbox("Velg verdi du ønsker å se over tid",col_l)
 st.write(select_verdi)
@@ -360,7 +360,7 @@ st.write("""
 
 
 formue = summary_dataframe[["Bolig verdi","Lån","Verdipapirer","EK Bolig","EK verdipapirer","EK total"]]
-budsjett = summary_dataframe[["Lønn","Lønn etter skatt","Betjening av lån","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum","Sparing"]]
+budsjett = summary_dataframe[["Lønn","Lønn etter skatt","Betjening av lån","Avdrag","Renteutgivter","Andre utgifter","Studie gjeld","lønn etter utgift","Leieinntekter","Konsum","Sparing"]]
 
 st.write("""
 ##### Total Oversikt, formue
