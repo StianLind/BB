@@ -303,7 +303,12 @@ list_investering_verdi = np.float_(list_investering_verdi)
 siste_investering_verdi = list_investering_verdi[-1:]
 siste_investering_verdi_str =  '{:,}'.format(int(siste_investering_verdi))
 
-bolig_invest_verdi = "Etter %d år vill din bolig være verdt %s kr, og du vill ha %s kr i invisert kapital." % (t, siste_bolig_verdi_str, siste_investering_verdi_str)
+list_lån_verdi = (summary_dataframe["Lån"].tolist())
+list_lån_verdi = np.float_(list_lån_verdi)
+siste_lån_verdi = list_lån_verdi[-1:]
+siste_lån_verdi_str =  '{:,}'.format(int(siste_lån_verdi))
+
+bolig_invest_verdi = "Etter %d år vill din bolig være verdt %s kr, du vill ha %s kr i invisert kapital, og et resterende lån på %s kr." % (t, siste_bolig_verdi_str, siste_investering_verdi_str, siste_lån_verdi_str)
 
 
 # print tekst
