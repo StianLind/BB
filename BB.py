@@ -269,7 +269,7 @@ summary_dataframe = summary(P_0, L_0, EK, lønn_0, p, r, m, cpi, lt, kon_0, t, s
 
 # snitt sparing
 list_sparing = (summary_dataframe["Sparing"].tolist())[1:]
-list_sparing = np.float_(list_sparing)
+list_sparing = np.float64(list_sparing)
 snitt_sparing = list_sparing.mean()
 
 snitt_sparing_str =  '{:,}'.format(int(snitt_sparing))
@@ -293,18 +293,18 @@ else:
 
 # bolig verdi og sparing
 list_bolig_verdi = (summary_dataframe["Bolig verdi"].tolist())
-list_bolig_verdi = np.float_(list_bolig_verdi)
+list_bolig_verdi = np.float64(list_bolig_verdi)
 siste_bolig_verdi = list_bolig_verdi[-1:]
 siste_bolig_verdi_str =  '{:,}'.format(int(siste_bolig_verdi))
 
 
 list_investering_verdi = (summary_dataframe["Verdipapirer"].tolist())
-list_investering_verdi = np.float_(list_investering_verdi)
+list_investering_verdi = np.float64(list_investering_verdi)
 siste_investering_verdi = list_investering_verdi[-1:]
 siste_investering_verdi_str =  '{:,}'.format(int(siste_investering_verdi))
 
 list_lån_verdi = (summary_dataframe["Lån"].tolist())
-list_lån_verdi = np.float_(list_lån_verdi)
+list_lån_verdi = np.float64(list_lån_verdi)
 siste_lån_verdi = list_lån_verdi[-1:]
 siste_lån_verdi_str =  '{:,}'.format(int(siste_lån_verdi))
 
@@ -336,7 +336,7 @@ Om denne linjen går under null, vill du gå i underskudd den måneden.
 
 
 sparig_data = (summary_dataframe["Sparing"].tolist())[1:]
-sparig_data = np.float_(sparig_data)
+sparig_data = np.float64(sparig_data)
 st.line_chart(sparig_data)
 
 
@@ -352,7 +352,7 @@ st.write(select_verdi)
 
 
 plot_data = (summary_dataframe[select_verdi].tolist())[1:]
-plot_data = np.float_(plot_data)
+plot_data = np.float64(plot_data)
 
 st.line_chart(plot_data)
 
